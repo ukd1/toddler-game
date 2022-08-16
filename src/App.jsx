@@ -29,6 +29,14 @@ function generateBuckets() {
   ));
 }
 
+function haveIntersection(r1, r2) {
+  let distX = r1.x() - r2.x();
+  let distY = r1.y() - r2.y();
+  let distance = Math.sqrt((distX*distX) + (distY*distY))
+
+  return (distance <= r1.radius() + r2.radius())
+}
+
 const COLORS = ['red', 'blue', 'green'];
 const INITIAL_BALL_STATE = generateBalls();
 const INITIAL_BUCKET_STATE = generateBuckets();
@@ -39,7 +47,6 @@ function App() {
 
   const handleDragStart = (e) => {
     const id = e.target.id();
-    console.log("dragging", id);
     setBalls(
       balls.map((ball) => {
         return {
@@ -48,6 +55,22 @@ function App() {
         };
       })
     );
+  };
+
+  const handleDragMove = (e) => {
+    let id = e.target.id
+    let _ball = e.target;
+
+    buckets.forEach(function (bucket) {
+      let _bucket = bucket.ref.current;
+
+      if (_ball.attrs['fill'] == _bucket.attrs['fill']) {
+        if (haveIntersection(_bucket, _ball)) {
+          // console.log("Intersection with ", bucket.color, "bucket");
+          _ball.destroy();
+        }
+      }
+    });
   };
 
   const handleDragEnd = (e) => {
@@ -95,6 +118,7 @@ function App() {
           scaleY={ball.isDragging ? 1.2 : 1}
           draggable
           onDragStart={handleDragStart}
+          onDragMove={handleDragMove}
           onDragEnd={handleDragEnd}
 
         />

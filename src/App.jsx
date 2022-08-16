@@ -8,6 +8,7 @@ import { Stage, Layer, Circle } from 'react-konva';
 function generateBalls() {
   return [...Array(10)].map((_, i) => ({
     id: i.toString(),
+    ref: React.createRef(),
     x: 30 + (Math.random() * (window.innerWidth - 60)),
     y: Math.random() * (window.innerHeight - 200),
     color: COLORS[i % 3],
@@ -19,6 +20,7 @@ function generateBalls() {
 function generateBuckets() {
   return [...Array(3)].map((_, i) => ({
     id: i.toString(),
+    ref: React.createRef(),
     x: 150 + (200 * i),
     y: window.innerHeight - 100,
     radius: 60,
@@ -62,8 +64,22 @@ function App() {
   return (
     <Stage width={window.innerWidth} height={window.innerHeight}>
       <Layer>
+      {buckets.map((bucket) => (
+        <Circle
+          ref={bucket.ref}
+          key={bucket.id}
+          id={bucket.id}
+          x={bucket.x}
+          y={bucket.y}
+          radius={bucket.radius}
+          fill={bucket.color}
+          stroke="black"
+          strokeWidth={1}
+        />
+      ))}
       {balls.map((ball) => (
         <Circle
+          ref={ball.ref}
           key={ball.id}
           id={ball.id}
           x={ball.x}
@@ -79,17 +95,7 @@ function App() {
           scaleY={ball.isDragging ? 1.2 : 1}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
-          draggable={true}
-        />
-      ))}
-      {buckets.map((bucket) => (
-        <Circle
-          key={bucket.id}
-          id={bucket.id}
-          x={bucket.x}
-          y={bucket.y}
-          radius={bucket.radius}
-          fill={bucket.color}
+
         />
       ))}
       </Layer>

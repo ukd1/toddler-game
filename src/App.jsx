@@ -93,6 +93,7 @@ function App() {
           shadowOffsetY={ball.isDragging ? 10 : 5}
           scaleX={ball.isDragging ? 1.2 : 1}
           scaleY={ball.isDragging ? 1.2 : 1}
+          draggable
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
 
